@@ -1,10 +1,9 @@
 
-PWD        := $(shell pwd)
-KVERSION   := $(shell uname -r)
-KERNEL_DIR  ?= /usr/src/linux-headers-$(KVERSION)/
-MODULE_DIR  = /lib/modules/$(KVERSION)
+KERNEL_DIR := /opt/work/repos/bitbucket-dev-lwn/linux-display5-fitImage
+MODULE_NAME := mtdRW
+PWD := $(shell pwd)
+CROSS=/opt/target_sdk/tmp/sysroots/x86_64/usr/bin/arm-poky-linux-gnueabi/arm-poky-linux-gnueabi-
 
-MODULE_NAME  = mtdRW
 obj-m       := $(MODULE_NAME).o
 
 all:
@@ -15,11 +14,12 @@ clean:
 
 
 # Alternatives for cross compiling
-#all-cross:
-#	make ARCH=arm CROSS_COMPILE=arm-cortexa8-linux-gnueabi- -C $(KERNEL_DIR) M=$(PWD) modules
-#
-#clean-cross:
-#	make ARCH=arm CROSS_COMPILE=arm-cortexa8-linux-gnueabi- -C $(KERNEL_DIR) M=$(PWD) clean
+all-cross:
+	@echo 'Building Kernel Driver for module $(MODULE_NAME).'
+	make ARCH=arm CROSS_COMPILE=$(CROSS) -C $(KERNEL_DIR) SUBDIRS=$(PWD) M=$(PWD) modules
+
+clean-cross:
+	make -C $(KERNEL_DIR) SUBDIRS=$(PWD)  ARCH=arm CROSS_COMPILE=$(CROSS) clean
 
 install: $(MODULE_NAME).ko
 	cp $(MODULE_NAME).ko $(MODULE_DIR)/kernel/drivers/mtd
