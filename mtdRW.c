@@ -28,7 +28,7 @@ static int __init mtdRW_init(void) {
     keep_going = true;
     for (n = 0; keep_going; n++) {
         mtd = get_mtd_device(NULL, n);
-	if (!IS_ERR(mtd)) {
+    if (!IS_ERR(mtd)) {
             mtd->flags |= MTD_WRITEABLE;
             printk(KERN_INFO "mtdRW: Make mtd device writeable: %s\n", mtd->name);
             put_mtd_device(mtd);
